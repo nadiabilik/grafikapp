@@ -90,27 +90,29 @@ namespace grafikapp
         static void DodajPracownika()
         {
             Console.WriteLine("\n---DODAWANIE PRACOWNIKA---\n");
-            int id = pracownicy.Count == 0 ? 1 : pracownicy[pracownicy.Count - 1].Id + 1;
+            int id = 1;
+            foreach (Pracownik pracownik in pracownicy)
+                if (pracownik.Id >= id) id = pracownik.Id + 1;
 
             string? imie = null;
             while (imie == null)
             {
                 Console.WriteLine("Imię: ");
-                imie = Walidator.SprawdzTekst(Console.ReadLine(), "imię");
+                imie = Walidator.SprawdzImie(Console.ReadLine());
             }
 
             string? nazwisko = null;
             while (nazwisko == null)
             {
                 Console.WriteLine("Nazwisko: ");
-                nazwisko = Walidator.SprawdzTekst(Console.ReadLine(), "nazwisko");
+                nazwisko = Walidator.SprawdzNazwisko(Console.ReadLine());
             }
 
             string? stanowisko = null;
             while (stanowisko == null)
             {
                 Console.WriteLine("Stanowisko: ");
-                stanowisko = Walidator.SprawdzTekst(Console.ReadLine(), "stanowisko");
+                stanowisko = Walidator.SprawdzStanowisko(Console.ReadLine());
             }
 
             Pracownik nowyPracownik = new Pracownik(id, imie, nazwisko, stanowisko);

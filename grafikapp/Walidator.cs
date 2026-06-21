@@ -7,11 +7,11 @@ namespace grafikapp
     internal class Walidator
     {
         // TEKST imię, nazwisko, stanowisko
-        public static string SprawdzTekst(string wejscie, string nazwaPolaDoWyswietlenia)
+        public static string SprawdzImie(string wejscie)
         {
             if (string.IsNullOrWhiteSpace(wejscie))
             {
-                Console.WriteLine($"Nie można pozostawić pola {nazwaPolaDoWyswietlenia} pustego. Proszę wprowadzić poprawną wartość.");
+                Console.WriteLine("Nie można pozostawić pola imię pustego. Proszę wprowadzić poprawną wartość.");
                 return null;
             }
 
@@ -19,38 +19,147 @@ namespace grafikapp
 
             if (wejscie.Length < 2)
             {
-                Console.WriteLine($"Pole {nazwaPolaDoWyswietlenia} musi zawierać co najmniej 2 znaki. Proszę wprowadzić poprawną wartość.");
+                Console.WriteLine("Imię musi zawierać co najmniej 2 znaki. Proszę wprowadzić poprawną wartość.");
                 return null;
             }
 
             if (wejscie.Length > 50)
             {
-                Console.WriteLine($"Pole {nazwaPolaDoWyswietlenia} nie może zawierać więcej niż 50 znaków. Proszę wprowadzić poprawną wartość.");
+                Console.WriteLine("Imię nie może zawierać więcej niż 50 znaków. Proszę wprowadzić poprawną wartość.");
                 return null;
             }
 
             foreach (char c in wejscie)
             {
-                if (!char.IsLetter(c) && c != ' ' && c != '-')
+                if (!char.IsLetter(c))
                 {
-                    Console.WriteLine($"Pole {nazwaPolaDoWyswietlenia} zawiera niedozwolony znak. Pole może zawierać tylko litery, spacje i myślniki. Proszę wprowadzić poprawną wartość.");
+                    Console.WriteLine($"Imię zawiera niedozwolony znak '{c}'. Imię może zawierać tylko litery bez spacji i myślników.");
                     return null;
                 }
             }
 
-            if (wejscie[0] == ' ' || wejscie[0] == '-' )
+            // Pierwsza litera duża, reszta mała
+            return char.ToUpper(wejscie[0]) + wejscie.Substring(1).ToLower();        
+        }
+
+        public static string SprawdzNazwisko(string wejscie)
+        {
+            if (string.IsNullOrWhiteSpace(wejscie))
             {
-                Console.WriteLine($"Pole {nazwaPolaDoWyswietlenia} nie może zaczynać się od spacji lub myślnika. Proszę wprowadzić poprawną wartość.");
+                Console.WriteLine("Nie można pozostawić pola nazwisko pustego. Proszę wprowadzić poprawną wartość.");
                 return null;
             }
 
-            if (wejscie[wejscie.Length - 1] == ' ' || wejscie[wejscie.Length - 1] == '-')
+            wejscie = wejscie.Trim();
+
+            if (wejscie.Length < 2)
             {
-                Console.WriteLine($"Pole {nazwaPolaDoWyswietlenia} nie może kończyć się na spację lub myślnik. Proszę wprowadzić poprawną wartość.");
+                Console.WriteLine("Nazwisko musi zawierać co najmniej 2 znaki.");
                 return null;
             }
 
-            return wejscie;
+            if (wejscie.Length > 50)
+            {
+                Console.WriteLine("Nazwisko nie może zawierać więcej niż 50 znaków.");
+                return null;
+            }
+
+            foreach (char c in wejscie)
+            {
+                if (!char.IsLetter(c) && c != '-')
+                {
+                    Console.WriteLine($"Nazwisko zawiera niedozwolony znak '{c}'. Nazwisko może zawierać tylko litery i myślnik.");
+                    return null;
+                }
+            }
+
+            if (wejscie[0] == '-' || wejscie[wejscie.Length - 1] == '-')
+            {
+                Console.WriteLine("Nazwisko nie może zaczynać się ani kończyć myślnikiem.");
+                return null;
+            }
+
+            string wynik = "";
+            bool nastepnaLiteraDuza = true;
+            foreach (char c in wejscie)
+            {
+                if (c == '-')
+                {
+                    wynik += c;
+                    nastepnaLiteraDuza = true;
+                }
+                else if (nastepnaLiteraDuza)
+                {
+                    wynik += char.ToUpper(c);
+                    nastepnaLiteraDuza = false;
+                }
+                else
+                {
+                    wynik += char.ToLower(c);
+                }
+            }
+
+            return wynik;
+        }
+
+        public static string SprawdzStanowisko(string wejscie)
+        {
+            if (string.IsNullOrWhiteSpace(wejscie))
+            {
+                Console.WriteLine("Nie można pozostawić pola stanowisko pustego. Proszę wprowadzić poprawną wartość.");
+                return null;
+            }
+
+            wejscie = wejscie.Trim();
+
+            if (wejscie.Length < 2)
+            {
+                Console.WriteLine("Stanowisko musi zawierać co najmniej 2 znaki.");
+                return null;
+            }
+
+            if (wejscie.Length > 50)
+            {
+                Console.WriteLine("Stanowisko nie może zawierać więcej niż 50 znaków.");
+                return null;
+            }
+
+            foreach (char c in wejscie)
+            {
+                if (!char.IsLetter(c) && c != ' ')
+                {
+                    Console.WriteLine($"Stanowisko zawiera niedozwolony znak '{c}'. Stanowisko może zawierać tylko litery i spacje.");
+                    return null;
+                }
+            }
+
+            if (wejscie[0] == ' ' || wejscie[wejscie.Length - 1] == ' ')
+            {
+                Console.WriteLine("Stanowisko nie może zaczynać się ani kończyć spacją.");
+                return null;
+            }
+
+            string wynik = "";
+            bool nastepnaLiteraDuza = true;
+            foreach (char c in wejscie)
+            {
+                if (c == ' ')
+                {
+                    wynik += c;
+                    nastepnaLiteraDuza = true;
+                }
+                else if (nastepnaLiteraDuza)
+                {
+                    wynik += char.ToUpper(c);
+                    nastepnaLiteraDuza = false;
+                }
+                else
+                {
+                    wynik += char.ToLower(c);
+                }
+            }
+
+            return wynik;
         }
 
         // ID
@@ -229,31 +338,57 @@ namespace grafikapp
         {
             if (string.IsNullOrWhiteSpace(wejscie))
             {
-                Console.WriteLine("Nie można pozostawić pola Miesiąc pustego. Wpisz np. 2026-06 lub 06.2026");
+                Console.WriteLine("Nie można pozostawić pola Miesiąc pustego. Wpisz np. 2026-06, 06.2026, 09/2026 lub 2026.09");
                 return null;
             }
 
             wejscie = wejscie.Trim();
-            
-            if (wejscie.Contains(".") && !wejscie.Contains("-"))
+
+            foreach (char c in wejscie)
             {
-                string[] czesci = wejscie.Split('.');
-                if (czesci.Length == 2)
-                    wejscie = $"{czesci[1]}-{czesci[0]}";
+                if (char.IsLetter(c))
+                {
+                    Console.WriteLine("Niepoprawny format miesiąca. Wpisz np. 2026-06, 06.2026, 09/2026 lub 2026.09");
+                    return null;
+                }
             }
 
-            if (wejscie.Length != 7 || wejscie[4] != '-')
+            char separator;
+            if (wejscie.Contains('-')) separator = '-';
+            else if (wejscie.Contains('.')) separator = '.';
+            else if (wejscie.Contains('/')) separator = '/';
+            else
             {
-                Console.WriteLine("Niepoprawny format miesiąca. Wpisz np. 2026-06 lub 06.2026");
+                Console.WriteLine("Niepoprawny format miesiąca. Wpisz np. 2026-06, 06.2026, 09/2026 lub 2026.09");
+                return null;
+            }
+
+            string[] czesci = wejscie.Split(separator);
+
+            if (czesci.Length != 2)
+            {
+                Console.WriteLine("Niepoprawny format miesiąca. Wpisz np. 2026-06, 06.2026, 09/2026 lub 2026.09");
+                return null;
+            }
+
+            if (!int.TryParse(czesci[0], out int pierwszaCzesc) ||
+                !int.TryParse(czesci[1], out int drugaCzesc))
+            {
+                Console.WriteLine("Niepoprawny format miesiąca — musi zawierać tylko cyfry.");
                 return null;
             }
 
             int rok, miesiac;
-            if (!int.TryParse(wejscie.Substring(0, 4), out rok) ||
-                !int.TryParse(wejscie.Substring(5, 2), out miesiac))
+            
+            if (pierwszaCzesc > 12)
             {
-                Console.WriteLine("Niepoprawny format miesiąca. Wpisz np. 2026-06 lub 06.2026");
-                return null;
+                rok = pierwszaCzesc;
+                miesiac = drugaCzesc;
+            }
+            else
+            {
+                miesiac = pierwszaCzesc;
+                rok = drugaCzesc;
             }
 
             if (rok < 2000 || rok > 2100)
@@ -268,7 +403,7 @@ namespace grafikapp
                 return null;
             }
 
-            return wejscie;
+            return $"{rok}-{miesiac:D2}";
         }
 
         //ODPOWIEDZ TAK/NIE
@@ -311,6 +446,8 @@ namespace grafikapp
                 Console.WriteLine("Nazwa pliku nie może być dłuższa niż 100 znaków. Została użyta domyślna nazwa.");
                 return domyslna;
             }
+
+
 
             return wejscie;
         }
